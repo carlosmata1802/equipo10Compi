@@ -31,11 +31,7 @@ char *string_buf_ptr;
 
 %}
 
-<<<<<<< HEAD
 %x cade 
-=======
-%x cade
->>>>>>> 450a4edeb491eaeb8ca6db4719168975be063892
 %x comentario
 %%
 
@@ -47,12 +43,11 @@ entero     {adjust(); return ENTERO;}
 [0-9]+   {adjust(); yylval.ival=atoi(yytext); return INT;}
 
 
-\"              {adjust(); string_buf_ptr = string_buf;
+\"              {adjust(); string_buf_ptr = string_buf;  
                  BEGIN(cade);
                  /*Regla que da inicio a la condicion de arranque mostrada arriba %x cade especificando las comillas que inician
 		  *Para la especificación de una cadena "cadena"
 		 */
-<<<<<<< HEAD
                 } 
 
 <cade>\"        { /* Se encuenta la comilla que cierrra en la cadena para finalizar su análisis*/
@@ -62,24 +57,13 @@ entero     {adjust(); return ENTERO;}
                    yylval.sval=String(string_buf); 
                    return STRING; 
                    /* 
-=======
-                }
-
-<cade>\"        { /* Se encuenta la comilla que cierrra en la cadena para finalizar su análisis*/
-                   adjust();
-                   BEGIN(INITIAL);
-                   *string_buf_ptr = '\0';
-                   yylval.sval=String(string_buf);
-                   return STRING;
-                   /*
->>>>>>> 450a4edeb491eaeb8ca6db4719168975be063892
                     * Se ajusta la posición del analizador
 		    * BEGIN vuelve al estado inicial para cualquier otra condicion
                     * *string_buf_ptr = '\0' el apuntador ahora llega al fin de cadena
                     * retorna el token STRING definido para una cadena y
                     * el valor para el analizador sintáctico
                     */
-
+                   
                    }
 
 <cade>\n        {
@@ -105,7 +89,7 @@ entero     {adjust(); return ENTERO;}
                     */
                    }
 
-<cade>\\n    {adjust(); *string_buf_ptr++ = '\n';}
+<cade>\\n    {adjust(); *string_buf_ptr++ = '\n';} 
 <cade>\\t    {adjust(); *string_buf_ptr++ = '\t';}
 <cade>\\r    {adjust(); *string_buf_ptr++ = '\r';}
 <cade>\\b    {adjust(); *string_buf_ptr++ = '\b';}
@@ -115,11 +99,7 @@ entero     {adjust(); return ENTERO;}
 
 <cade>\\(.|\n)  {
                 /*Encuenta una linea nueva y aumenta el número de líneas contadas*/
-<<<<<<< HEAD
                 adjust(); EM_newline(); *string_buf_ptr++ = yytext[1]; } 
-=======
-                adjust(); EM_newline(); *string_buf_ptr++ = yytext[1]; }
->>>>>>> 450a4edeb491eaeb8ca6db4719168975be063892
 
 <cade>[^\\\n\"]+  {
                     adjust();
@@ -127,7 +107,7 @@ entero     {adjust(); return ENTERO;}
                     while ( *yptr )
                            *string_buf_ptr++ = *yptr++;
                     /*Va a tomar todo lo que no sea un salto de línea seguido del cierre de comillas simples
-                      cada caracter leído se guarda en el apuntador a STRING
+                      cada caracter leído se guarda en el apuntador a STRING   
                     */
                    }
 
