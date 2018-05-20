@@ -31,7 +31,7 @@ char *string_buf_ptr;
 
 %}
 
-%x cade /*Se define la condición de arranque como exclusiva*/
+%x cade 
 %x comentario
 %%
 
@@ -45,27 +45,29 @@ entero     {adjust(); return ENTERO;}
 
 \"              {adjust(); string_buf_ptr = string_buf;  
                  BEGIN(cade);
-                 /*Regla que da inicio a la condicion de arranque*/
+                 /*Regla que da inicio a la condicion de arranque mostrada arriba %x cade especificando las comillas que inician
+		  *Para la especificación de una cadena "cadena"
+		 */
                 } 
 
-<cade>\"        { /* se vio la comilla que cierra - todo está hecho la condición termina*/
+<cade>\"        { /* Se encuenta la comilla que cierrra en la cadena para finalizar su análisis*/
                    adjust();
                    BEGIN(INITIAL); 
-                   *string_buf_ptr = '\0'; /*/
+                   *string_buf_ptr = '\0'; 
                    yylval.sval=String(string_buf); 
                    return STRING; 
                    /* 
-                    * vuelve al estado inicial para cualquier otra condicion
-                    * el apuntador ahora llega al fin de cadena
-                    * devuelve un tipo de token de cadena constante y
+                    * Se ajusta la posición del analizador
+		    * BEGIN vuelve al estado inicial para cualquier otra condicion
+                    * *string_buf_ptr = '\0' el apuntador ahora llega al fin de cadena
+                    * retorna el token STRING definido para una cadena y
                     * el valor para el analizador sintáctico
                     */
                    
                    }
 
 <cade>\n        {
-                   /* error - cadena constante sin finalizar */
-                   /* genera un mensaje de error */
+                   /* genera un mensaje de error ya que una cadena no puede estar separada en código por un salto de linea */
                    }
 
 <cade>\\[0-7]{1,3} {
@@ -92,11 +94,11 @@ entero     {adjust(); return ENTERO;}
 <cade>\\r    {adjust(); *string_buf_ptr++ = '\r';}
 <cade>\\b    {adjust(); *string_buf_ptr++ = '\b';}
 <cade>\\f    {adjust(); *string_buf_ptr++ = '\f';
-              /*Devuelve el tipo caracter cada que encuentra un salto de linea, un tabulador, etc.*/
+              /*Devuelve el tipo caracter cada que encuentra un salto de linea, un tabulador, etc. especificado dentro de la cadena*/
               }
 
 <cade>\\(.|\n)  {
-                /*Encontro una nueva línea, por tanto se hace un aumento del número de líneas contadas*/
+                /*Encuenta una linea nueva y aumenta el número de líneas contadas*/
                 adjust(); EM_newline(); *string_buf_ptr++ = yytext[1]; } 
 
 <cade>[^\\\n\"]+  {
