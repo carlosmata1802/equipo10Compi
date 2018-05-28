@@ -11,10 +11,10 @@ lex.yy.o: lex.yy.c y.tab.h errormsg.h util.h
 	gcc -g -c lex.yy.c
 
 lex.yy.c: mc.l y.tab.h
-	flex mc.l
+	flex mc.l principal.c
 
 util.o: util.c util.h
 	cc -g -c util.c
 
-clean: 
+clean:
 	rm -f a.out lextest util.o driver.o lex.yy.o lex.yy.c errormsg.o
